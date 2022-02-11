@@ -1,11 +1,23 @@
 import pandas as pd
 from utils.all_utils import prepare_data,save_plot
 from utils.models import Perceptron
+import logging
+import os
+
+gate = "AND"
+log_dir = "logs" 
+os.makedirs(log_dir, exist_ok=True)
+logging.basicConfig(
+    filename=os.path.join(log_dir,"running_logs.log"),
+    level=logging.INFO,
+    format='[%(asctime)s:%(levelname)s:%(module)s]:%(message)s',
+    filemode= 'a'
+    )
 
 def main(data,modelName,plotName,eta,epochs):
-    df_AND = pd.DataFrame(data)
-
-    X,y = prepare_data(df_AND)
+    df = pd.DataFrame(data)
+    logging.info(f"This is raw dataset:\n{df}")
+    X,y = prepare_data(df)
     model = Perceptron(eta=eta,epochs=epochs)
     model.fit(X,y)
 
@@ -13,7 +25,7 @@ def main(data,modelName,plotName,eta,epochs):
 
     model.save(model_dir="model",filename=modelName)
 
-    save_plot(df_AND,model,filename=plotName)
+    save_plot(df,model,filename=plotName)
 
 
 
@@ -25,5 +37,10 @@ if __name__ == "__main__":
     }
     ETA = 0.3
     EPOCHS = 10
-    main(data=AND,modelName ="and.model",plotName="and.png",eta=ETA,epochs=EPOCHS)
-
+    try:
+        logging.info(f">>>>Strating Training for {gate}>>>>>")
+        main(data=AND,modelName ="and.model",plotName="and.png",eta=ETA,epochs=EPOCHS)
+        logging.info(f">>>>Done Training for {gate}>>>>>\n\n")
+    except Exception as e:
+        logging.exception(e)
+        raise(e)

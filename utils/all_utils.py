@@ -8,6 +8,15 @@ import logging
 
 # prepare data by segregating the target and feature columns
 def prepare_data(df,target_col = "y"):
+    """It returns labels and independent features
+
+    Args:
+        df (pd.Dataframe): This is a dataframe
+        target_col (str, optional): label col name. Defaults to "y".
+
+    Returns:
+        tuple: label and X
+    """
     logging.info(f">>>>Preparing the data for training>>>>>")
     X = df.drop("y",axis=1)
 
@@ -15,9 +24,17 @@ def prepare_data(df,target_col = "y"):
 
     return X,y
 
-
+  
 # Method for making and saving plots
 def save_plot(df,model,filename ="plot.png",plot_dir ="plots"):
+    """Save and plot the regions of seperation or classification line
+
+    Args:
+        df (pd.Dataframe): This is a dataframe
+        model ([type]): a binary file with a perceptron model           
+        filename (str, optional): name of the plot file. Defaults to "plot.png".
+        plot_dir (str, optional): name of the directory to keep the plot files. Defaults to "plots".
+    """
     def _create_base_plot(df):
         logging.info(f">>>>Creating the base plot>>>>>")
         df.plot(kind="scatter",x="x1",y="x2",c="y",s=100,cmap="coolwarm")
